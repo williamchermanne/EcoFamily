@@ -1,9 +1,9 @@
 class Person:
-	def __init__(self, name, pseudo, age, wallet):
+	def __init__(self, name, pseudo, age):
 		self.name = name
 		self.pseudo = pseudo
 		self.age = age
-		self.wallet = wallet
+		self.wallet = 0
 	
 	def displayInfos(self):
 		print(" ")
