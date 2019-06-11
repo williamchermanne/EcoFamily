@@ -1,16 +1,23 @@
-import person,product
+import Person,Product,Request
 
-William = person.Person("William","Will",23)
-Lola=person.Person("Lola","BabyLola",21)
-William.displayInfos()
-Lola.displayInfos()
-person.exchange(Lola,William,10)
-William.displayInfos()
-Lola.displayInfos()
+William = Person.Person("William","Will",23)
+Lola=Person.Person("Lola","BabyLola",21)
 
-Hummus = product.Product("Hummus")
+
+Hummus = Product.Product("Hummus")
 Hummus.addIngredient("PoisChiches",4,0.5)
 Hummus.addIngredient("Eau",1,1)
 Hummus.computeValue(1,10)
 
 Hummus.displayInfos()
+
+William.displayInfos()
+Lola.displayInfos()
+Person.exchange(Lola,William,Hummus.Value)
+William.displayInfos()
+Lola.displayInfos()
+
+MyRequest= Request.Request("Hummus",0.5,"Lola")
+My2Request= Request.Request("Eggs",0.5,"William")
+MyRequest.displayInfos()
+My2Request.displayInfos()
