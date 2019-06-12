@@ -1,15 +1,17 @@
 class Request:
-		requestCount = 0
+		REQUEST_COUNT = 0
 		
-		def __init__(self, product, quantity, addressee):
+		def __init__(self, creator, product, quantity):
+			self.creator=creator
 			self.product=product
 			self.quantity=quantity
-			self.addressee=addressee
-			Request.requestCount+= 1
-			self.ID=Request.requestCount
+			self.status = "pending"
+			Request.REQUEST_COUNT+= 1
+			self.ID=Request.REQUEST_COUNT
 		
-		def displayInfos(self):
+		def display_infos(self):
 			print("Request number",self.ID)
 			print("Product",self.product)
-			print("Addressee",self.addressee)
+			print("Quantity",self.quantity)
+			
 		

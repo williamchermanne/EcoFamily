@@ -1,23 +1,19 @@
-import Person,Product,Request
+import Classes
 
-William = Person.Person("William","Will",23)
-Lola=Person.Person("Lola","BabyLola",21)
+RM = Classes.RequestManager()
+William = Classes.Person("William","Will",23, "Pasta")
+Lola=Classes.Person("Lola","BabyLola",21, "Hummus")
 
+Hummus = Classes.Product("Hummus")
+Hummus.add_ingredient("PoisChiches",4,0.5)
+Hummus.add_ingredient("Eau",1,1)
+Hummus.compute_value(1,10)
 
-Hummus = Product.Product("Hummus")
-Hummus.addIngredient("PoisChiches",4,0.5)
-Hummus.addIngredient("Eau",1,1)
-Hummus.computeValue(1,10)
+MyRequest= William.create_request("J'aimerais du Hummus","Hummus",0.5)
+RM.add_request(MyRequest)
+My2Request= Lola.create_request("J'aimerais des oeufs","Eggs",0.5)
+RM.add_request(My2Request)
+My3Request= Lola.create_request("J'aimerais du savon","Soap",1)
+RM.add_request(My3Request)
 
-Hummus.displayInfos()
-
-William.displayInfos()
-Lola.displayInfos()
-Person.exchange(Lola,William,Hummus.Value)
-William.displayInfos()
-Lola.displayInfos()
-
-MyRequest= Request.Request("Hummus",0.5,"Lola")
-My2Request= Request.Request("Eggs",0.5,"William")
-MyRequest.displayInfos()
-My2Request.displayInfos()
+RM.remove_request(MyRequest)
