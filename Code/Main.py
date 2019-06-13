@@ -2,18 +2,43 @@
 
 import Classes
 import Functions
-RM = Classes.RequestManager()
-William = Classes.Person("William","Will",23, "Pasta")
-Lola=Classes.Person("Lola","BabyLola",21, "Hummus")
 
+
+SM = Classes.SystemManager()
+
+# Create persons
+William = Classes.Person("William","Will",23)
+Lola = Classes.Person("Lola","BabyLola",21)
+SM.PersonManager.add_person(William)
+SM.PersonManager.add_person(Lola)
+
+#Create ingredients
 Hummus = Classes.Ingredient("Hummus",300,4.08)
 Tahin = Classes.Ingredient("Tahin",30,11.78)
 
 
-RecetteHummus = Classes.Recipe("La recette de Hummus de Lola",10,0,Lola)
-RecetteHummus.add_ingredient(Hummus)
-RecetteHummus.add_ingredient(Tahin)
+#Create recipes
+RecetteHummusLola = Classes.Recipe("La recette de Hummus de Lola",10,0,Lola)
+RecetteHummusLola.add_ingredient(Hummus)
+RecetteHummusLola.add_ingredient(Tahin)
 
+RecetteHummusWilliam = Classes.Recipe("La recette de Hummus de William",20,0,William)
+RecetteHummusWilliam.add_ingredient(Hummus)
+RecetteHummusWilliam.add_ingredient(Tahin)
+
+Hummus = Classes.Product("Hummus")
+Hummus.add_recipe(SM,RecetteHummusLola)
+Hummus.add_recipe(SM,RecetteHummusWilliam)
+
+SM.RecipeManager.display_recipe_list()
+
+
+#Create product
+
+#Create request
+
+
+"""
 Hummus = Classes.Product("Hummus")
 Hummus.add_recipe(RecetteHummus)
 Hummus.show_recipes()
@@ -29,3 +54,5 @@ My3Request= Lola.create_request("J'aimerais du savon","Soap",1)
 RM.add_request(My3Request)
 
 RM.remove_request(MyRequest)
+"""
+

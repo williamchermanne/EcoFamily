@@ -44,39 +44,54 @@ class Recipe:
 		self.price = Functions.compute_price(ingredients_price,self.active_time,self.passive_time)
 	
 	def display_infos(self):
-		print("")
-		print("Recipe from",self.creator.name, ":")
-		for i in range(len(self.ingredient_list)):
-			ingredient = (self.ingredient_list[i])
-			print("Ingredient number",i+1)
+		ingredient_counter = 0
+		print(self.name)
+		print("Recipe from",self.creator.name)
+		print("Price:",self.price)
+		print("Active time:",self.active_time)
+		print("Passive time:",self.passive_time)
+		for ingredient in self.ingredient_list:
+			ingredient_counter += 1
+			print("Ingredient number",ingredient_counter)
 			ingredient.display_infos()
 		print(self.comment)
 	
-	
+class RecipeManager:
+	number_of_recipes = 0
+		
+	def __init__(self):
+		self.recipe_list=[]
+		
+	def add_recipe(self,recipe):
+		self.recipe_list.append(recipe)
+		RecipeManager.number_of_recipes += 1
+		
+	def remove_request(self,recipe):
+		self.recipe_list.remove(request)
+		RecipeManager.number_of_recipes -= 1
+		
+	def display_recipe_list(self):
+		for recipe in self.recipe_list:
+			print(recipe.name)	
 
 class Product:
 	def __init__(self, name):
 		self.name = name
 		self.recipe_list = []
-		self.selected_recipe = None 
-		self.value = 0
 	
-	def add_recipe(self,recipe):
+	def add_recipe(self,SystemManager,recipe):
 		self.recipe_list.append(recipe)
-		
+		SystemManager.RecipeManager.add_recipe(recipe)
+
 	def remove_recipe(self,recipe):
 		self.recipe_list.remove(recipe)
 	
-	def show_recipes(self):
-		print("Product:",self.name)
-		for i in range(len(self.recipe_list)):
-			recipe = (self.recipe_list[i])
-			print("Recipe number",recipe.ID)
-			recipe.display_infos()
-		
 	def display_infos(self):
-		print(self.name)
-		print(self.Value, "Moneco")	
+		print("Product:",self.name)
+		for recipe in self.recipe_list:
+			print(recipe.name)
+			
+			
 		
 class Request:
 	REQUEST_COUNT = 0
@@ -96,35 +111,39 @@ class Request:
 		print("Quantity",self.quantity)
 	
 class RequestManager:
-	ACTIVE_REQUEST = 0
+	number_of_requests = 0
 		
 	def __init__(self):
 		self.request_list=[]
 		
 	def add_request(self,request):
 		self.request_list.append(request)
+		RequestManager.number_of_requests += 1
 			
 	def remove_request(self,request):
 		self.request_list.remove(request)
+		RequestManager.number_of_requests -= 1
 		
 	def display_request_list(self):
-		for i in range(len(self.request_list)):
-			request = (self.request_list[i])
+		for request in self.request_list:
 			request.display_infos()
 
 class Person:
-	def __init__(self, name, pseudo, age, specialty):
+	PERSON_COUNT = 0
+	def __init__(self, name, pseudo, age):
 		self.name = name
 		self.pseudo = pseudo
 		self.age = age
-		self.specialty = specialty
+		self.specialty = ""
 		self.wallet = 0
+		Person.PERSON_COUNT+= 1
+		self.ID=Person.PERSON_COUNT
 		
 	def give_money(self,amount):
-		self.wallet -=amount
+		self.wallet -= amount
 		
 	def receive_money(self, amount):	
-		self.wallet +=amount
+		self.wallet += amount
 	
 	def create_request(self,title,product,quantity):
 		request = Request(self.name,title,product,quantity)
@@ -138,7 +157,32 @@ class Person:
 		print("Specialty:",self.specialty)
 		print("Wallet:",self.wallet)
 		print(" ")
-						
+
+class PersonManager:
+	number_of_persons = 0
+	
+	def __init__(self):
+		self.person_list=[]
+		
+	def add_person(self,person):
+		self.person_list.append(person)
+		PersonManager.number_of_persons += 1
+			
+	def remove_person(self,person):
+		self.person_list.remove(person)
+		PersonManager.number_of_persons -= 1
+		
+	def display_person_list(self):
+		for person in self.person_list:
+			print(person.name)
+			
+class SystemManager:
+
+	def __init__(self):
+		self.PersonManager = PersonManager()
+		self.RequestManager = RequestManager()
+		self.RecipeManager = RecipeManager()
+	
 		
 			
 	
