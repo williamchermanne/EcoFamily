@@ -7,31 +7,42 @@ import Functions
 SM = Classes.SystemManager()
 
 # Create persons
-William = Classes.Person("William","Will",23)
-Lola = Classes.Person("Lola","BabyLola",21)
-SM.PersonManager.add_person(William)
-SM.PersonManager.add_person(Lola)
+William = Classes.User("William","Will",23)
+Lola = Classes.User("Lola","BabyLola",21)
+SM.UserManager.add_user(William)
+SM.UserManager.add_user(Lola)
 
 #Create ingredients
-Hummus = Classes.Ingredient("Hummus",300,4.08)
+PoisChiches = Classes.Ingredient("PoisChiches",300,4.08)
 Tahin = Classes.Ingredient("Tahin",30,11.78)
-
+Eau = Classes.Ingredient("Eau Fraiche",100,0)
 
 #Create recipes
 RecetteHummusLola = Classes.Recipe("La recette de Hummus de Lola",10,0,Lola)
-RecetteHummusLola.add_ingredient(Hummus)
+RecetteHummusLola.add_ingredient(PoisChiches)
 RecetteHummusLola.add_ingredient(Tahin)
 
 RecetteHummusWilliam = Classes.Recipe("La recette de Hummus de William",20,0,William)
-RecetteHummusWilliam.add_ingredient(Hummus)
+RecetteHummusWilliam.add_ingredient(PoisChiches)
 RecetteHummusWilliam.add_ingredient(Tahin)
+RecetteHummusWilliam.display_infos()
+
+RecetteEauFraiche = Classes.Recipe("Une recette d'eau fraîche",0,0,William)
+RecetteEauFraiche.add_ingredient(Eau)
+RecetteEauFraiche.display_infos()
+
+EauFraiche = Classes.Product("Eau Fraiche")
+EauFraiche.add_recipe(SM,EauFraiche)
 
 Hummus = Classes.Product("Hummus")
 Hummus.add_recipe(SM,RecetteHummusLola)
 Hummus.add_recipe(SM,RecetteHummusWilliam)
 
-SM.RecipeManager.display_recipe_list()
+SM.ProductManager.add_product(Hummus)
+SM.ProductManager.add_product(EauFraiche)
 
+SM.ProductManager.display_product_list()
+SM.RecipeManager.display_recipe_list()
 
 #Create product
 
