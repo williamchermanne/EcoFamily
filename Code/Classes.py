@@ -123,9 +123,10 @@ class ProductManager:
 class Request:
 	REQUEST_COUNT = 0
 
-	def __init__(self, SystemManager, name, creator, product, quantity):
+	def __init__(self, SystemManager, creator, name, product, quantity):
 		self.name = name
-		self.creator=creator
+		self.creator = creator
+		self.acceptor = None
 		self.product=product
 		self.quantity=quantity
 		self.status = "pending" # Can be either pending, accepted or done
@@ -136,8 +137,11 @@ class Request:
 
 	def display_infos(self):
 		print("Request number",self.ID,"from",self.creator, ":",self.name,"(Status =",self.status,")")
-		print("Product",self.product.name)
-		print("Quantity",self.quantity)
+		print("Product:",self.product.name)
+		print("Quantity:",self.quantity,"kg or L")
+		print("Status:",self.status)
+		if (self.status == "accepted"):
+			print("Acceptor:",self.acceptor.name)
 
 
 class RequestManager:
@@ -154,54 +158,18 @@ class RequestManager:
 		self.request_list.remove(request)
 		RequestManager.number_of_requests -= 1
 
+	def update(self):
+		for request in self.request_list:
+			if (request.status == "accepted"):
+				self.request_list.remove(request)
+
 	def display_request_list(self):
 		print(" ")
-		print("Rquest list:")
+		print("Request list:")
 		print(" ")
 		for request in self.request_list:
 			request.display_infos()
 
-class Rendezvous:
-	RENDEZVOUS_COUNT = 0
-
-	def __init__(self,SystemManager, creator,destinator,request,date,time,location):
-		self.status = "pending"
-		self.creator = creator
-		self.destinator = destinator
-		self.date = date
-		self.time = time
-		self.location = location
-		Rendezvous.RENDEZVOUS_COUNT+= 1
-		self.ID=Rendezvous.RENDEZVOUS_COUNT
-
-		SystemManager.RendezvousManager.add_rendezvous(self)
-
-	def display_infos(self):
-		print("Rendezvous between",self.creator.name,"and",self.destinator.name, "(Status =",self.status,")")
-		print("Date",self.date)
-		print("Time",self.time)
-		print("Location",self.location)
-
-class RendezvousManager:
-	number_of_rendezvous = 0
-
-	def __init__(self):
-		self.rendezvous_list=[]
-
-	def add_rendezvous(self,rendezvous):
-		self.rendezvous_list.append(rendezvous)
-		RequestManager.number_of_rendezvous += 1
-
-	def remove_rendezvous(self,rendezvous):
-		self.rendezvous_list.remove(rendezvous)
-		RendezvousManager.number_of_rendezvous-= 1
-
-	def display_rendezvous_list(self):
-		print(" ")
-		print("Rendezvous list:")
-		print(" ")
-		for rendezvous in self.rendezvous_list:
-			rendezvous.display_infos()
 
 class User:
 	USER_COUNT = 0
@@ -213,6 +181,7 @@ class User:
 		self.wallet = 0
 		self.request_accepted_list = []
 		self.request_sent_list = []
+		self.rendezvous_list = []
 		User.USER_COUNT+= 1
 		self.ID=User.USER_COUNT
 
@@ -225,17 +194,42 @@ class User:
 		self.wallet += amount
 
 	def create_request(self,SystemManager,name,product,quantity):
-		request = Request(SystemManager,self.name,name,product,quantity)
+		request = Request(SystemManager,self,name,product,quantity)
 		self.request_sent_list.append(request)
 
-	def delete_request(self,SystemManager, requestID):
+	def delete_request(self, SystemManager, requestID):
 		for request in self.request_sent_list:
 			if (request.ID == requestID):
 				self.request_sent_list.remove(request)
 				SystemManager.RequestManager.remove_request(request)
 
-	def create_rendezvous(self,SystemManager,destinator,request,date,time,location):
-		Rendezvous(SystemManager,self,self.name,destinator,request,date,time,location)
+	def accept_request(self,SystemManager,requestID):
+		for request in SystemManager.RequestManager.request_list:
+			if (request.ID == requestID):
+				request.status = "accepted"
+				request.acceptor = self
+				self.request_accepted_list.append(request)
+
+	def create_rendezvous(self,SystemManager,requestID,date,time,location):
+		for request in self.request_accepted_list:
+			if (request.ID == requestID):
+				myrequest = request
+				rendezvous = Rendezvous(SystemManager,self,myrequest.creator,myrequest,date,time,location)
+				print(rendezvous.creator.name)
+				print(myrequest.creator)
+				self.rendezvous_list.append(rendezvous)
+
+	def accept_rendezvous(self, SystemManager, rendezvousID):
+		for rendezvous in SystemManager.RendezvousManager.rendezvous_list:
+			if (rendezvous.destinator == self):
+				self.rendezvous_list.append(rendezvous)
+				rendezvous.status = "accepted"
+
+	def delete_rendezvous(self, SystemManager, rendezvousID):
+		for rendezvous in self.rendezvous_list:
+			if (rendezvous.ID == rendezvousID):
+				self.rendezvous_list.remove(rendezvous)
+				SystemManager.RendezvousManager.remove_rendezvous(rendezvous)
 
 	def display_infos(self):
 		print(" ")
@@ -244,6 +238,9 @@ class User:
 		print("Age:",self.age)
 		print("Specialty:",self.specialty)
 		print("Wallet:",self.wallet)
+		print("Active rendezvous:")
+		for rendezvous in self.rendezvous_list:
+			rendezvous.display_infos()
 		print(" ")
 
 class UserManager:
@@ -266,6 +263,53 @@ class UserManager:
 		print(" ")
 		for user in self.user_list:
 			print(user.name)
+
+class Rendezvous:
+	RENDEZVOUS_COUNT = 0
+
+	def __init__(self,SystemManager, creator,destinator,request,date,time,location):
+		self.status = "pending"
+		self.creator = creator
+		self.destinator = destinator
+		self.date = date
+		self.time = time
+		self.location = location
+		self.request = request
+		Rendezvous.RENDEZVOUS_COUNT+= 1
+		self.ID=Rendezvous.RENDEZVOUS_COUNT
+
+		SystemManager.RendezvousManager.add_rendezvous(self)
+
+	def display_infos(self):
+		print("Rendezvous number",self.ID,"between",self.creator.name,"and",self.destinator.name, "(Status =",self.status,")")
+		print("Date",self.date)
+		print("Time",self.time)
+		print("Location",self.location)
+
+class RendezvousManager:
+	number_of_rendezvous = 0
+
+	def __init__(self):
+		self.rendezvous_list=[]
+
+	def add_rendezvous(self,rendezvous):
+		self.rendezvous_list.append(rendezvous)
+		RendezvousManager.number_of_rendezvous += 1
+
+	def remove_rendezvous(self,rendezvous):
+		self.rendezvous_list.remove(rendezvous)
+		RendezvousManager.number_of_rendezvous-= 1
+
+	def update(self):
+		for rendezvous in self.rendezvous_list:
+			if (rendezvous.status == "done"):
+				self.rendezvous_list.remove(rendezvous)
+	def display_rendezvous_list(self):
+		print(" ")
+		print("Rendezvous list:")
+		print(" ")
+		for rendezvous in self.rendezvous_list:
+			rendezvous.display_infos()
 
 class SystemManager:
 

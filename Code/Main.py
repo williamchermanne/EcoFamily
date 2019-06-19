@@ -46,17 +46,25 @@ Christine.create_request(SM,"J'aimerais du Hummus",Hummus,1)
 Lola.create_request(SM,"Moi aussi!",Hummus,1)
 William.create_request(SM,"Moi j'ai soif!",EauFraiche,1)
 
-SM.RequestManager.display_request_list()
 
 William.delete_request(SM,3)
+Lola.create_request(SM,"Moi j'ai soif soif soif!",EauFraiche,1)
+
+William.accept_request(SM,4)
+William.create_rendezvous(SM, 4, "22/07/2019", "00h00", "Charleroi")
+
+Lola.accept_rendezvous(SM,1)
+William.display_infos()
+Lola.display_infos()
 
 # INFOS
-SM.UserManager.display_user_list()
-SM.ProductManager.display_product_list()
 SM.RequestManager.display_request_list()
+SM.RendezvousManager.display_rendezvous_list()
+William.display_infos()
 
-Lola.create_request(SM,"Moi j'ai soif soif soif!",EauFraiche,1)
-SM.RequestManager.display_request_list()
+
+
+
 
 """
 Hummus = Classes.Product("Hummus")
